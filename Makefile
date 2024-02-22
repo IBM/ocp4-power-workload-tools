@@ -2,7 +2,7 @@
 ARCH ?= ppc64le
 
 # The app to build
-APP ?= phony
+APP ?= ocp4-power-workload-tools
 
 # If absent, registry defaults
 REGISTRY ?= quay.io/powercloud 
@@ -20,94 +20,10 @@ cross-build-user: verify-environment
 	+@echo "Done Image - 'user'"
 .PHONY: cross-build-user
 
-cross-build-user-db: verify-environment
-	+@echo "Building Image - 'user-db'"
-	+@podman build --platform linux/${ARCH} -t ${REGISTRY}/sock-shop-user-db:${ARCH} -f automation/Dockerfile-user-db
-	+@echo "Done Image - 'user-db'"
-.PHONY: cross-build-user-db
-
-cross-build-front-end: verify-environment
-	+@echo "Building Image - 'front-end'"
-	+@podman build --platform linux/${ARCH} -t ${REGISTRY}/sock-shop-front-end:${ARCH} -f automation/Dockerfile-front-end
-	+@echo "Done Image - 'front-end'"
-.PHONY: cross-build-front-end
-
-cross-build-payment: verify-environment
-	+@echo "Building Image - 'payment'"
-	+@podman build --platform linux/${ARCH} -t ${REGISTRY}/sock-shop-payment:${ARCH} -f automation/Dockerfile-payment
-	+@echo "Done Image - 'payment'"
-.PHONY: cross-build-payment
-
-cross-build-orders: verify-environment
-	+@echo "Building Image - 'orders'"
-	+@podman build --platform linux/${ARCH} -t ${REGISTRY}/sock-shop-orders:${ARCH} -f automation/Dockerfile-orders
-	+@echo "Done Image - 'orders'"
-.PHONY: cross-build-orders
-
-cross-build-catalogue: verify-environment
-	+@echo "Building Image - 'catalogue'"
-	+@podman build --platform linux/${ARCH} -t ${REGISTRY}/sock-shop-catalogue:${ARCH} -f automation/Dockerfile-catalogue
-	+@echo "Done Image - 'catalogue'"
-.PHONY: cross-build-catalogue
-
-cross-build-catalogue-db: verify-environment
-	+@echo "Building Image - 'catalogue-db'"
-	+@podman build --platform linux/${ARCH} -t ${REGISTRY}/sock-shop-catalogue-db:${ARCH} -f automation/Dockerfile-catalogue-db
-	+@echo "Done Image - 'catalogue-db'"
-.PHONY: cross-build-catalogue-db
-
-cross-build-carts: verify-environment
-	+@echo "Building Image - 'carts'"
-	+@podman build --platform linux/${ARCH} -t ${REGISTRY}/sock-shop-carts:${ARCH} -f automation/Dockerfile-carts
-	+@echo "Done Image - 'carts'"
-.PHONY: cross-build-carts
-
-cross-build-shipping: verify-environment
-	+@echo "Building Image - 'shipping'"
-	+@podman build --platform linux/${ARCH} -t ${REGISTRY}/sock-shop-shipping:${ARCH} -f automation/Dockerfile-shipping
-	+@echo "Done Image - 'shipping'"
-.PHONY: cross-build-shipping
-
-cross-build-queue-master: verify-environment
-	+@echo "Building Image - 'queue-master'"
-	+@podman build --platform linux/${ARCH} -t ${REGISTRY}/sock-shop-queue-master:${ARCH} -f automation/Dockerfile-queue-master
-	+@echo "Done Image - 'queue-master'"
-.PHONY: cross-build-queue-master
-
-cross-build-amd64: cross-build-user cross-build-front-end cross-build-payment cross-build-orders cross-build-catalogue cross-build-catalogue-db cross-build-carts cross-build-shipping cross-build-queue-master
-.PHONY: cross-build-amd64 
-
-# cross-build-catalogue-db is not supported on non-amd64 arches
-cross-build-other: cross-build-user cross-build-front-end cross-build-payment cross-build-orders cross-build-catalogue cross-build-carts cross-build-shipping cross-build-queue-master
-.PHONY: cross-build-other
-
 # pushes the individual images
-push-all-ind: verify-environment
-	+@podman push ${REGISTRY}/sock-shop-carts:${ARCH}
-	+@podman push ${REGISTRY}/sock-shop-catalogue:${ARCH}
-	+@podman push ${REGISTRY}/sock-shop-front-end:${ARCH}
-	+@podman push ${REGISTRY}/sock-shop-orders:${ARCH}
-	+@podman push ${REGISTRY}/sock-shop-payment:${ARCH}
-	+@podman push ${REGISTRY}/sock-shop-queue-master:${ARCH}
+push-user: verify-environment
 	+@podman push ${REGISTRY}/sock-shop-user:${ARCH}
-	+@podman push ${REGISTRY}/sock-shop-shipping:${ARCH}
-.PHONY: push-all-ind
-
-push-catalogue-db: verify-environment
-	+@echo "push Image - 'catalogue-db'"
-	+@podman push ${REGISTRY}/sock-shop-catalogue-db:${ARCH}
-	+@echo "Done push Image - 'catalogue-db'"
-.PHONY: push-catalogue-db
-
-push-user-db: verify-environment
-	+@echo "push Image - 'user-db'"
-	+@podman push ${REGISTRY}/sock-shop-user-db:${ARCH}
-	+@echo "Done Image - 'user-db'"
-.PHONY: push-user-db
-
-# These images are build separately and only target amd64
-push-db: verify-environment push-catalogue-db push-user-db
-.PHONY: push-db
+.PHONY: push-user
 
 pull-deps:
 	+@podman pull --platform linux/amd64 ${REGISTRY}/sock-shop-${APP}:amd64

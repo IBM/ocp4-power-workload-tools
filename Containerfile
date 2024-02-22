@@ -17,5 +17,4 @@ gpgcheck=0\
 " > /etc/yum.repos.d/centos-stream9-app.repo
 RUN cat /etc/yum.repos.d/centos-stream9.repo
 RUN dnf update -y
-RUN dnf install -y numactl util-linux numactl-libs
-RUN dnf install powerpc-utils -y
+RUN dnf install -y numactl util-linux numactl-libs powerpc-utils
