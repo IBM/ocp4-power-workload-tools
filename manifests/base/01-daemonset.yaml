@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: fluentd-elasticsearch
-  namespace: kube-system
+  name: ocp4-numa-power-workload
+  namespace: openshift-power-workload
   labels:
-    k8s-app: fluentd-logging
+    app: power-numa-workload
 spec:
   selector:
     matchLabels:
-      name: fluentd-elasticsearch
+      app: power-numa-workload
   template:
     metadata:
       labels:
-        name: fluentd-elasticsearch
+        app: power-numa-workload
     spec:
       tolerations:
       - key: node-role.kubernetes.io/control-plane
@@ -23,7 +23,7 @@ spec:
         effect: NoSchedule
       containers:
       - name: fluentd-elasticsearch
-        image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
+        image: ghcr.io/ibm/ocp4-power-workload-tools:main
         resources:
           limits:
             memory: 200Mi
