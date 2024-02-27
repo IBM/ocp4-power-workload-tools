@@ -22,7 +22,7 @@ spec:
         operator: Exists
         effect: NoSchedule
       containers:
-      - name: fluentd-elasticsearch
+      - name: numa-workload
         image: ghcr.io/ibm/ocp4-power-workload-tools:main
         resources:
           limits:
