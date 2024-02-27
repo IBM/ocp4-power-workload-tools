@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ocp4-numa-power-workload
+  namespace: openshift-power-workload
+  labels:
+    app: power-numa-workload
+spec:
+  selector:
+    matchLabels:
+      app: power-numa-workload
+  template:
+    metadata:
+      labels:
+        app: power-numa-workload
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: numa-workload
+        image: ghcr.io/ibm/ocp4-power-workload-tools:main
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
