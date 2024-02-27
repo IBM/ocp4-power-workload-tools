@@ -25,6 +25,8 @@ spec:
       - name: numa-hugepages
         image: ghcr.io/ibm/ocp4-power-workload-tools:main
         imagePullPolicy: Always
+        nodeSelector:
+          kubernetes.io/arch: ppc64le
         command: [ "/bin/bash" ]
         args: [ "/report-hugepages.sh"]
         resources:
@@ -37,6 +39,8 @@ spec:
       - name: numa-workload
         image: ghcr.io/ibm/ocp4-power-workload-tools:main
         imagePullPolicy: Always
+        nodeSelector:
+          kubernetes.io/arch: ppc64le
         command: [ "/bin/sleep" ]
         args: [ "infinity" ]
         resources:
