@@ -3,6 +3,15 @@ This repository aids the debug of scheduling on ppc64le.
 
 The [`ocp4-power-workload-tools` project](https://github.com/ocp-power-automation/ocp4-power-workload-tools) provides code to debug workloads on OpenShift Container Platform (OCP) 4.x compute workers on a variety of platforms.
 
+## Use
+
+```
+❯ oc apply -k manifests/overlays/multi
+...
+project.project.openshift.io/openshift-power-workload created
+daemonset.apps/ocp4-numa-power-workload created
+```
+
 ## Design
 
 This code is designed to be modular. The code base favors Dockerfile, Ansible, however does accept code in shell and hcl.

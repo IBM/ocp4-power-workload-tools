@@ -18,3 +18,4 @@ gpgcheck=0\
 RUN cat /etc/yum.repos.d/centos-stream9.repo
 RUN dnf update -y
 RUN dnf install -y numactl util-linux numactl-libs powerpc-utils
+ADD scripts/report-hugepages.sh /

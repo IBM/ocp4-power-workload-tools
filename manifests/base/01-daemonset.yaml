@@ -21,12 +21,57 @@ spec:
       - key: node-role.kubernetes.io/master
         operator: Exists
         effect: NoSchedule
+      initContainers:
+      - name: numa-hugepages
+        image: ghcr.io/ibm/ocp4-power-workload-tools:main
+        imagePullPolicy: Always
+        command: [ "/bin/bash" ]
+        args: [ "/report-hugepages.sh"]
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
       containers:
       - name: numa-workload
         image: ghcr.io/ibm/ocp4-power-workload-tools:main
+        imagePullPolicy: Always
+        command: [ "/bin/sleep" ]
+        args: [ "infinity" ]
         resources:
           limits:
-            memory: 200Mi
+            memory: 100Mi
           requests:
             cpu: 100m
-            memory: 200Mi
+            memory: 100Mi
+#        volumeMounts:
+#        - name: host-sys
+#          mountPath: /sys
+        securityContext:
+          privileged: false
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+# We may add this in the future
+#            add:
+#              - CAP_SYS_ADMIN
+#              - CAP_FOWNER
+#              - NET_ADMIN
+#              - SYS_ADMIN
+            drop:
+              - ALL
+#          runAsUser: 0
+#          runAsGroup: 0
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+      # volumes:
+      # - name: host-sys
+      #   hostPath:
+      #     path: /sys
+      #     type: Directory
+      # priorityClassName: system-cluster-critical
+      hostPID: false
+      hostIPC: false
+      hostNetwork: false

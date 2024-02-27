@@ -11,4 +11,5 @@ sortOptions:
   order: fifo
 
 resources:
+  - 00-project.yaml
   - 01-daemonset.yaml
