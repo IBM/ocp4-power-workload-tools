@@ -22,3 +22,4 @@ RUN [ "$(arch)" == "ppc64le" ]       \
      && dnf install -y powerpc-utils \
      || echo "Not running on ppc64le, skip linking powerpc-utils dependency"
 ADD scripts/report-hugepages.sh /
+ADD scripts/report-numa.sh /

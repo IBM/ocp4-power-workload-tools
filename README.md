@@ -5,6 +5,8 @@ The [`ocp4-power-workload-tools` project](https://github.com/ocp-power-automatio
 
 ## Use
 
+To deploy `quay.io/powercloud/ocp4-power-workload-tools:main` use: 
+
 ```
 ❯ oc apply -k manifests/overlays/multi
 ...

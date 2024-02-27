@@ -10,6 +10,9 @@ on:
     branches: [ "main" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
+    paths-ignore:
+      - 'manifests/**'
+      - 'README.md'
 
 env:
   # Use docker.io for Docker Hub if empty
