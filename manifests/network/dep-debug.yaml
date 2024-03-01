@@ -38,8 +38,8 @@ spec:
         ports:
         - containerPort: 80
           type: TCP
-        command: [ "/bin/sleep" ]
-        args: [ "infinity" ]
+        command: [ "/agnhost" ]
+        args: [ "nettest", "--port", "80" ]
         resources:
           limits:
             memory: 100Mi
