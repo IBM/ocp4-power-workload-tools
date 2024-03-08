@@ -12,7 +12,7 @@ do
     echo "\nwaiting 3 seconds\n"
     sleep 3
 
-    for TRY in echo {0..5}
+    for TRY in echo {0..100}
     do
         echo "TRY: ${TRY}"
         echo "Putting a debug pod on the opposite - powerworker"
