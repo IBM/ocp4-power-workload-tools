@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: debug-runner
+  namespace: openshift-net-workload
+  labels:
+    app: power-net-workload-debug
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: power-net-workload-debug
+  template:
+    metadata:
+      labels:
+        app: power-net-workload-debug
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: ppc64le
+      containers:
+        - name: runner
+          image: quay.io/centos/centos:stream9
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9080
+              type: TCP
+          command: ["/bin/sleep"]
+          args: ["infinity"]
+          resources:
+            limits:
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          securityContext:
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false

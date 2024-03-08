@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+oc apply -f manifests/network/ds-debug-run.yaml
+
 # The default port range is 30000-32767
 # https://docs.openshift.com/container-platform/4.15/networking/configuring-node-port-service-range.html
 for PORT in {30000..32767}
@@ -14,10 +16,10 @@ do
     do
         echo "TRY: ${TRY}"
         echo "Putting a debug pod on the opposite - powerworker"
-        oc apply -f manifests/network/pod-debug-run.yaml
         sleep 1
 
-        oc rsh pod/runner curl http://power-net-workload-svc.openshift-net-workload.svc.cluster.local:8080/status -k
+        # fail in logs is ok.
+        oc rsh daemonset/debug-runner curl http://power-net-workload-svc.openshift-net-workload.svc.cluster.local:8080/status -k -v
         [ $? -eq 1 ] && echo "Failed to curl"
     done
 done
