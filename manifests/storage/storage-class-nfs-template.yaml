@@ -1,0 +1,134 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+message: |-
+  The NFS client provisioner deployment has been created in your project.
+metadata:
+  annotations:
+    description: NFS Client Provisioner Template
+    openshift.io/display-name: NFS Client Provisioner Template
+    tags: nfs
+    template.openshift.io/provider-display-name: IBM Power Systems Team
+  name: nfs-client-provisioner
+objects:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: nfs-client-provisioner
+    labels:
+      app: nfs-client-provisioner
+  spec:
+    replicas: 1
+    strategy:
+      type: Recreate
+    selector:
+      matchLabels:
+        app: nfs-client-provisioner
+    template:
+      metadata:
+        labels:
+          app: nfs-client-provisioner
+      spec:
+        serviceAccountName: nfs-client-provisioner
+        containers:
+          - name: nfs-client-provisioner
+            image: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
+            volumeMounts:
+              - name: nfs-client-root
+                mountPath: /persistentvolumes
+            env:
+              - name: PROVISIONER_NAME
+                value: k8s-sigs.io/nfs-subdir-external-provisioner
+              - name: NFS_SERVER
+                value: ${NFS_SERVER}
+              - name: NFS_PATH
+                value: ${NFS_PATH}
+        volumes:
+          - name: nfs-client-root
+            nfs:
+              server: ${NFS_SERVER}
+              path: ${NFS_PATH}
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: nfs-client-provisioner
+    namespace: ${NAMESPACE}
+- kind: ClusterRole
+  apiVersion: rbac.authorization.k8s.io/v1
+  metadata:
+    name: nfs-client-provisioner-runner
+  rules:
+    - apiGroups: [""]
+      resources: ["nodes"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: [""]
+      resources: ["persistentvolumes"]
+      verbs: ["get", "list", "watch", "create", "delete"]
+    - apiGroups: [""]
+      resources: ["persistentvolumeclaims"]
+      verbs: ["get", "list", "watch", "update"]
+    - apiGroups: ["storage.k8s.io"]
+      resources: ["storageclasses"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: [""]
+      resources: ["events"]
+      verbs: ["create", "update", "patch"]
+- kind: ClusterRoleBinding
+  apiVersion: rbac.authorization.k8s.io/v1
+  metadata:
+    name: run-nfs-client-provisioner
+  subjects:
+    - kind: ServiceAccount
+      name: nfs-client-provisioner
+      namespace: ${NAMESPACE}
+  roleRef:
+    kind: ClusterRole
+    name: nfs-client-provisioner-runner
+    apiGroup: rbac.authorization.k8s.io
+- kind: Role
+  apiVersion: rbac.authorization.k8s.io/v1
+  metadata:
+    name: leader-locking-nfs-client-provisioner
+    namespace: ${NAMESPACE}
+  rules:
+    - apiGroups: [""]
+      resources: ["endpoints"]
+      verbs: ["get", "list", "watch", "create", "update", "patch"]
+- kind: RoleBinding
+  apiVersion: rbac.authorization.k8s.io/v1
+  metadata:
+    name: leader-locking-nfs-client-provisioner
+    namespace: ${NAMESPACE}
+  subjects:
+    - kind: ServiceAccount
+      name: nfs-client-provisioner
+      namespace: ${NAMESPACE}
+  roleRef:
+    kind: Role
+    name: leader-locking-nfs-client-provisioner
+    apiGroup: rbac.authorization.k8s.io
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    annotations:
+      storageclass.kubernetes.io/is-default-class: "true"
+    name: nfs-client
+  provisioner: k8s-sigs.io/nfs-subdir-external-provisioner
+  parameters:
+    pathPattern: "${.PVC.namespace}/${.PVC.annotations.nfs.io/storage-path}"
+    onDelete: delete
+parameters:
+- description: The NFS server ip accessible from the cluster nodes
+  displayName: NFS_SERVER
+  name: NFS_SERVER
+  required: true
+  value: 0.0.0.0
+- description:
+  displayName: NFS_PATH
+  name: NFS_PATH
+  required: true
+  value: /export
+- description: The OpenShift Namespace where the access controls need to be set.
+  displayName: NAMESPACE
+  name: NAMESPACE
+  required: true
+  value: nfs-provisioner
