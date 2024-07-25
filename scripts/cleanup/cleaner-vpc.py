@@ -90,6 +90,4 @@ for resource in vpcs:
     if vpc['resource_group']['id'] == resource_group_id:
         print(resource["created_at"] + " " + resource["name"] + " " + resource["crn"])
 
-print("There were => " + str(idx))
-
 print("[VPCs] - [FINISHED CLEANING]")
