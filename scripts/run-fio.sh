@@ -12,5 +12,10 @@ ioengine=libaio
 direct=1
 numjobs=1
 iodepth=32
-group_reporting=1[nvme0]
-filename=/dev/nvme0n1
+group_reporting=1
+
+[vd]
+filename=/dev/vda
+EOF
+
+fio /tmp/perf.fio 

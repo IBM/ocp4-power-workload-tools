@@ -23,3 +23,4 @@ RUN [ "$(arch)" == "ppc64le" ]       \
      || echo "Not running on ppc64le, skip linking powerpc-utils dependency"
 ADD scripts/report-hugepages.sh /
 ADD scripts/report-numa.sh /
+ADD scripts/run-fio.sh /

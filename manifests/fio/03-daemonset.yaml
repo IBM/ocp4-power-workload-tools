@@ -125,7 +125,7 @@ spec:
         - name: host-sys
           mountPath: /sys
         - name: host-dev
-          mountPath: /dev
+          mountPath: /sys-dev
         serviceAccount: ocp4-workload-sa
         serviceAccountName: ocp4-workload-sa
         securityContext:
