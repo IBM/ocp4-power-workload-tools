@@ -14,6 +14,33 @@ project.project.openshift.io/openshift-power-workload created
 daemonset.apps/ocp4-numa-power-workload created
 ```
 
+### Use fio debug
+
+```
+kustomize build manifests/overlays/fio | oc apply -f -
+oc rsh pod/<pod-name>
+...
+cat << EOF > /tmp/perf.fio
+[global]
+name=perf-seq-read
+time_based
+ramp_time=5
+runtime=30
+readwrite=write
+bs=256k
+ioengine=libaio
+direct=1
+numjobs=1
+iodepth=32
+group_reporting=1
+
+[vd]
+filename=/dev/vda
+EOF
+
+fio /tmp/perf.fio 
+```
+
 ## Design
 
 This code is designed to be modular. The code base favors Dockerfile, Ansible, however does accept code in shell and hcl.
