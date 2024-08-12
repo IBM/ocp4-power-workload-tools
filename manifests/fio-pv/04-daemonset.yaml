@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ocp4-numa-power-workload-fio
+  namespace: openshift-power-workload-fio
+  labels:
+    app: power-numa-workload-fio
+spec:
+  selector:
+    matchLabels:
+      app: power-numa-workload-fio
+  template:
+    metadata:
+      annotations:
+        openshift.io/required-scc: privileged
+        openshift.io/scc: privileged
+      labels:
+        app: power-numa-workload-fio
+    spec:
+      containers:
+      - name: numa-workload
+        image: quay.io/powercloud/ocp4-power-workload-tools:main
+        imagePullPolicy: Always
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/arch
+                  operator: In
+                  values:
+                  - ppc64le
+                  - amd64
+        command: [ "/bin/sleep" ]
+        args: [ "infinity" ]
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - name: pv
+          mountPath: /pv
+        serviceAccount: ocp4-workload-sa
+        serviceAccountName: ocp4-workload-sa
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - CAP_SYS_ADMIN
+              - CAP_FOWNER
+              - NET_ADMIN
+              - SYS_ADMIN
+            drop:
+              - ALL
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: true
+      volumes:
+       - name: pv
+         persistentVolumeClaim:
+           claimName: workloads-fio-pvc
+      priorityClassName: system-cluster-critical
+      hostPID: true
+      hostIPC: true
+      hostNetwork: true
+      serviceAccount: ocp4-workload-sa
+      serviceAccountName: ocp4-workload-sa

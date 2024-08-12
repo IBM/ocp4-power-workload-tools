@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: workloads-fio-pvc
+  namespace: openshift-power-workload-fio
+spec:
+  storageClassName: "ibm-spectrum-scale-data-rwo-sc"
+  capacity: 100Gi
+  volumeName: workloads-fio-pv
