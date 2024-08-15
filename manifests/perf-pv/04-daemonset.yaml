@@ -47,11 +47,6 @@ spec:
         securityContext:
           privileged: true
           capabilities:
-            add:
-              - CAP_SYS_ADMIN
-              - CAP_FOWNER
-              - NET_ADMIN
-              - SYS_ADMIN
             drop:
               - ALL
           readOnlyRootFilesystem: false
