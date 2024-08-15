@@ -1,8 +1,8 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: ocp4-workload-fio
-  namespace: openshift-power-workload-fio
+  name: ocp4-workload
+  namespace: openshift-power-workload
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -10,4 +10,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ocp4-workload-sa
-  namespace: openshift-power-workload-fio
+  namespace: openshift-power-workload

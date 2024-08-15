@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: ocp4-numa-power-workload-fio
-  namespace: openshift-power-workload-fio
+  name: ocp4-power-workload
+  namespace: openshift-power-workload
   labels:
-    app: power-numa-workload-fio
+    app: power-workload
 spec:
   selector:
     matchLabels:
-      app: power-numa-workload-fio
+      app: power-workload
   template:
     metadata:
       annotations:
         openshift.io/required-scc: privileged
         openshift.io/scc: privileged
       labels:
-        app: power-numa-workload-fio
+        app: power-workload
     spec:
       containers:
-      - name: numa-workload
+      - name: workload
         image: quay.io/powercloud/ocp4-power-workload-tools:main
         imagePullPolicy: Always
         affinity:
@@ -59,7 +59,7 @@ spec:
       volumes:
        - name: pv
          persistentVolumeClaim:
-           claimName: workloads-fio-pvc
+           claimName: workloads-pvc
       priorityClassName: system-cluster-critical
       hostPID: true
       hostIPC: true
