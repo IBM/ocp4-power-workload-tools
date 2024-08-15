@@ -1,0 +1,11 @@
+[write-and-verify]
+rw=randwrite
+bs=4k
+direct=1
+ioengine=libaio
+iodepth=16
+verify=crc32c
+directory=/pv
+filename=testfile
+filename_format=$jobname-$clientuid-$filenum
+size=100g

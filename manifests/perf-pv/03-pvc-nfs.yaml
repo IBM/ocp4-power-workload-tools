@@ -4,9 +4,10 @@ metadata:
   name: workloads-pvc
   namespace: openshift-power-workload
 spec:
-  storageClassName: ibm-spectrum-scale-data-rwo-sc
+  storageClassName: nfs-client
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 4000Gi
+      storage: 10Gi
+  volumeMode: Filesystem
