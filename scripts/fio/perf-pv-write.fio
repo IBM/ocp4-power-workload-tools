@@ -1,16 +1,15 @@
-[write-and-verify]
+[seq-write]
 time_based
 readwrite=write
 bs=256k
-direct=1
+direct=0
 ioengine=libaio
-iodepth=32
+iodepth=16
 numjobs=4
-verify=crc32c
+# verify=crc32c
 directory=/pv
-filename=testfile
 filename_format=$jobname-$clientuid-$filenum
 group_reporting=1
-runtime=3600
-ramp_time=5
-size=10TB
+# 30 minutes
+runtime=1800
+size=100GB
