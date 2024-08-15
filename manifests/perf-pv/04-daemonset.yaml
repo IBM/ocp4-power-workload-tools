@@ -32,7 +32,8 @@ spec:
         args: [ "infinity" ]
         resources:
           limits:
-            memory: 100Mi
+            cpu: 4000m
+            memory: 4Gi
           requests:
             cpu: 100m
             memory: 100Mi
