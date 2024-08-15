@@ -11,16 +11,13 @@ spec:
       app: power-workload
   template:
     metadata:
-      annotations:
-        openshift.io/required-scc: privileged
-        openshift.io/scc: privileged
       labels:
         app: power-workload
     spec:
       containers:
       - name: workload
         image: quay.io/powercloud/ocp4-power-workload-tools:main
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         affinity:
           nodeAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
@@ -45,19 +42,14 @@ spec:
         serviceAccount: ocp4-workload-sa
         serviceAccountName: ocp4-workload-sa
         securityContext:
-          privileged: true
+          privileged: false
           capabilities:
             drop:
               - ALL
-          readOnlyRootFilesystem: false
-          allowPrivilegeEscalation: true
       volumes:
        - name: pv
          persistentVolumeClaim:
            claimName: workloads-pvc
       priorityClassName: system-cluster-critical
-      hostPID: true
-      hostIPC: true
-      hostNetwork: true
       serviceAccount: ocp4-workload-sa
       serviceAccountName: ocp4-workload-sa
