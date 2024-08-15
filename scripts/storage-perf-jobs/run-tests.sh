@@ -50,7 +50,7 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 4000Gi
+      storage: 11000Gi
 EOF
 IDX=$((IDX+1))
 done
