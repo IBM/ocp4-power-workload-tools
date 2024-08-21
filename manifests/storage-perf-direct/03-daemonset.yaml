@@ -125,7 +125,9 @@ spec:
         - name: host-sys
           mountPath: /sys
         - name: host-dev
-          mountPath: /sys-dev
+          mountPath: /host-dev
+        - name: host-usr
+          mountPath: /host-usr
         serviceAccount: ocp4-workload-sa
         serviceAccountName: ocp4-workload-sa
         securityContext:
@@ -150,6 +152,10 @@ spec:
        - name: host-dev
          hostPath:
            path: /dev
+           type: Directory
+       - name: host-usr
+         hostPath:
+           path: /usr
            type: Directory
       priorityClassName: system-cluster-critical
       hostPID: true
