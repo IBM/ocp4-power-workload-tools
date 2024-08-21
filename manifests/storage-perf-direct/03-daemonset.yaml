@@ -27,7 +27,7 @@ spec:
       initContainers:
       - name: numa-hugepages
         image: quay.io/powercloud/ocp4-power-workload-tools:main
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         affinity:
           nodeAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
@@ -64,7 +64,7 @@ spec:
           allowPrivilegeEscalation: true
       - name: numa-numa
         image: quay.io/powercloud/ocp4-power-workload-tools:main
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         affinity:
           nodeAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
@@ -102,7 +102,7 @@ spec:
       containers:
       - name: numa-workload
         image: quay.io/powercloud/ocp4-power-workload-tools:main
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         affinity:
           nodeAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
