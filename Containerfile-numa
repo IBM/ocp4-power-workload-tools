@@ -17,7 +17,7 @@ FROM quay.io/centos/centos:stream9
 # " > /etc/yum.repos.d/centos-stream9-app.repo
 # RUN cat /etc/yum.repos.d/centos-stream9.repo
 RUN dnf update -y
-RUN dnf install -y numactl util-linux numactl-libs fio sysstat bpftrace
+RUN dnf install -y numactl util-linux numactl-libs fio sysstat bpftrace perf
 RUN [ "$(arch)" == "ppc64le" ]       \
      && dnf install -y powerpc-utils powerpc-utils-core \
      || echo "Not running on ppc64le, skip linking powerpc-utils dependency"
