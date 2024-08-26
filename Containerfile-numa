@@ -19,7 +19,7 @@ FROM quay.io/centos/centos:stream9
 RUN dnf update -y
 RUN dnf install -y numactl util-linux numactl-libs fio sysstat bpftrace perf
 RUN [ "$(arch)" == "ppc64le" ]       \
-     && dnf install -y powerpc-utils powerpc-utils-core \
+     && dnf install -y powerpc-utils powerpc-utils-core bcc-tools bcc bzip2 pcp-system-tools tar \
      || echo "Not running on ppc64le, skip linking powerpc-utils dependency"
 ADD scripts/report-hugepages.sh /
 ADD scripts/report-numa.sh /
