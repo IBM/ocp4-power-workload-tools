@@ -22,7 +22,7 @@ RUN [ "$(arch)" == "ppc64le" ]       \
      && dnf install -y powerpc-utils powerpc-utils-core bcc-tools bcc bzip2 pcp-system-tools tar python3-bcc python3 python3-pip lsvpd \
      || echo "Not running on ppc64le, skip linking powerpc dependency"
 RUN [ "$(arch)" == "ppc64le" ]       \
-     && python -m pip install -U prettytable \
+     && python3 -m pip install -U prettytable \
      || echo "Not running on ppc64le, skip linking powerpc python dependency"
 ADD scripts/report-hugepages.sh /
 ADD scripts/report-numa.sh /
