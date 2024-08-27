@@ -19,8 +19,10 @@ FROM quay.io/centos/centos:stream9
 RUN dnf update -y
 RUN dnf install -y numactl util-linux numactl-libs fio sysstat bpftrace perf
 RUN [ "$(arch)" == "ppc64le" ]       \
-     && dnf install -y powerpc-utils powerpc-utils-core bcc-tools bcc bzip2 pcp-system-tools tar python3-bcc python3 \
+     && dnf install -y powerpc-utils powerpc-utils-core bcc-tools bcc bzip2 pcp-system-tools tar python3-bcc python3 python3-pip \
      || echo "Not running on ppc64le, skip linking powerpc-utils dependency"
+RUN [ "$(arch)" == "ppc64le" ]       \
+    && pip install PrettyTable
 ADD scripts/report-hugepages.sh /
 ADD scripts/report-numa.sh /
 ADD scripts/run-fio.sh /
