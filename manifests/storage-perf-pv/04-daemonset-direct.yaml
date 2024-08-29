@@ -1,0 +1,153 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: power-numa-workload-fio
+  name: ocp4-numa-power-workload-fio
+  namespace: openshift-power-workload
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: power-numa-workload-fio
+  template:
+    metadata:
+      annotations:
+        openshift.io/required-scc: privileged
+        openshift.io/scc: privileged
+      creationTimestamp: null
+      labels:
+        app: power-numa-workload-fio
+    spec:
+      containers:
+      - args:
+        - infinity
+        command:
+        - /bin/sleep
+        image: quay.io/powercloud/ocp4-power-workload-tools:main
+        imagePullPolicy: IfNotPresent
+        name: numa-workload
+        resources:
+          limits:
+            memory: 3000Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+            - CAP_SYS_ADMIN
+            - CAP_FOWNER
+            - NET_ADMIN
+            - SYS_ADMIN
+            drop:
+            - ALL
+          privileged: true
+          readOnlyRootFilesystem: false
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /sys
+          name: host-sys
+        - mountPath: /host-dev
+          name: host-dev
+        - mountPath: /host
+          name: host
+        - mountPath: /lib/modules
+          name: host-lib
+      dnsPolicy: ClusterFirst
+      hostIPC: true
+      hostNetwork: true
+      hostPID: true
+      initContainers:
+      - args:
+        - /report-hugepages.sh
+        command:
+        - /bin/bash
+        image: quay.io/powercloud/ocp4-power-workload-tools:main
+        imagePullPolicy: IfNotPresent
+        name: numa-hugepages
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+            - CAP_SYS_ADMIN
+            - CAP_FOWNER
+            - NET_ADMIN
+            - SYS_ADMIN
+            drop:
+            - ALL
+          privileged: true
+          readOnlyRootFilesystem: false
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      - args:
+        - /report-numa.sh
+        command:
+        - /bin/bash
+        image: quay.io/powercloud/ocp4-power-workload-tools:main
+        imagePullPolicy: IfNotPresent
+        name: numa-numa
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+            - CAP_SYS_ADMIN
+            - CAP_FOWNER
+            - NET_ADMIN
+            - SYS_ADMIN
+            drop:
+            - ALL
+          privileged: true
+          readOnlyRootFilesystem: false
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      priorityClassName: system-cluster-critical
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: ocp4-workload-sa
+      serviceAccountName: ocp4-workload-sa
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
+      volumes:
+      - hostPath:
+          path: /sys
+          type: Directory
+        name: host-sys
+      - hostPath:
+          path: /dev
+          type: Directory
+        name: host-dev
+      - hostPath:
+          path: /
+          type: Directory
+        name: host
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: host-lib
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
