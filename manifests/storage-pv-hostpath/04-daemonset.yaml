@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ocp4-power-workload
+  namespace: openshift-power-workload
+  labels:
+    app: power-workload
+spec:
+  selector:
+    matchLabels:
+      app: power-workload
+  template:
+    metadata:
+      labels:
+        app: power-workload
+    spec:
+      containers:
+      - name: workload
+        image: quay.io/powercloud/ocp4-power-workload-tools:main
+        imagePullPolicy: IfNotPresent
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/arch
+                  operator: In
+                  values:
+                  - ppc64le
+                  - amd64
+        command: [ "/bin/sleep" ]
+        args: [ "infinity" ]
+        resources:
+          limits:
+            cpu: 4000m
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - name: pv
+          mountPath: /pv
+        serviceAccount: ocp4-workload-sa
+        serviceAccountName: ocp4-workload-sa
+        securityContext:
+          privileged: false
+          capabilities:
+            drop:
+              - ALL
+      volumes:
+       - name: pv
+         persistentVolumeClaim:
+           claimName: workloads-pvc
+      priorityClassName: system-cluster-critical
+      serviceAccount: ocp4-workload-sa
+      serviceAccountName: ocp4-workload-sa
