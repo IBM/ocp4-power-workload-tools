@@ -15,4 +15,4 @@ resources:
   - 01-sa.yaml
   - 02-rbac.yaml
   - 03-pv.yaml
-  - 04-daemonset.yaml
+  - 04-deployment.yaml

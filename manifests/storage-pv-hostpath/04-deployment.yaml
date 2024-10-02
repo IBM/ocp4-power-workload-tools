@@ -1,11 +1,12 @@
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: ocp4-power-workload
   namespace: openshift-power-workload
   labels:
     app: power-workload
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: power-workload
@@ -31,6 +32,7 @@ spec:
         command: [ "/bin/sleep" ]
         args: [ "infinity" ]
         resources:
+# For debug purposes, may want to comment out the limits
           limits:
             cpu: 4000m
             memory: 4Gi
@@ -50,7 +52,7 @@ spec:
       volumes:
        - name: pv
          persistentVolumeClaim:
-           claimName: workloads-pvc
+           claimName: data-pvc
       priorityClassName: system-cluster-critical
       serviceAccount: ocp4-workload-sa
       serviceAccountName: ocp4-workload-sa
