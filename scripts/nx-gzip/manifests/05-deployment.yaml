@@ -43,6 +43,8 @@ spec:
         volumeMounts:
         - mountPath: /dev/crypto/nx-gzip
           name: dev-crypto-nx-gzip
+        - mountPath: /var/lib/nginx/tmp
+          name: nginx-tmp
         serviceAccount: ocp4-workload-sa
         serviceAccountName: ocp4-workload-sa
         securityContext:
@@ -54,6 +56,8 @@ spec:
       - name: dev-crypto-nx-gzip
         hostPath:
           path: /dev/crypto/nx-gzip
+      - name: nginx-tmp
+        emptyDir: {}
       priorityClassName: system-cluster-critical
       serviceAccount: ocp4-workload-sa
       serviceAccountName: ocp4-workload-sa
