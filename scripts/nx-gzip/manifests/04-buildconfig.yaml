@@ -1,0 +1,27 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: nx-gzip-build
+  namespace: power-nx-gzip
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'nx-gzip:latest'
+  successfulBuildsHistoryLimit: 5
+  failedBuildsHistoryLimit: 5
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: 'quay.io/centos/centos:stream9'
+  source:
+    type: Dockerfile
+    dockerfile: |
+      FROM quay.io/centos/centos:stream9
+      USER root
+      RUN dnf install -y libnxz nginx
+      RUN ln -s /usr/lib/libnxz.so.0.0 /usr/lib/libz.so
+      ENTRYPOINT ["LD_PRELOAD=/usr/lib64/libnxz.so.0", "NX_GZIP_TRACE=8", "nginx", "-g", "daemon", "off;"]
+  runPolicy: Serial

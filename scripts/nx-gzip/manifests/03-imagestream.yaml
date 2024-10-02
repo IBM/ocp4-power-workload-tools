@@ -1,0 +1,8 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: nx-gzip
+  namespace: power-nx-gzip
+spec:
+  lookupPolicy:
+    local: true

@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocp4-power-workload
+  namespace: power-nx-gzip
+  labels:
+    app: power-workload
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: power-workload
+  template:
+    metadata:
+      labels:
+        app: power-workload
+    spec:
+      containers:
+      - name: workload
+        image: quay.io/powercloud/ocp4-power-workload-tools:main
+        imagePullPolicy: IfNotPresent
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: cpu-coprocessor.nx_gzip
+                  operator: In
+                  values:
+                  - true
+        command: [ "/bin/sleep" ]
+        args: [ "infinity" ]
+        env:
+          - name: NX_GZIP_TRACE
+            value: "8"
+          - name: NX_GZIP_VERBOSE
+            value: "2"
+          - name: NX_GZIP_LOGFILE
+            value: "/tmp/nx-gzip.log"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /dev/crypto/nx-gzip
+          name: dev-crypto-nx-gzip
+        serviceAccount: ocp4-workload-sa
+        serviceAccountName: ocp4-workload-sa
+        securityContext:
+          privileged: false
+          capabilities:
+            drop:
+              - ALL
+      volumes:
+      - name: dev-crypto-nx-gzip
+        hostPath:
+          path: /dev/crypto/nx-gzip
+      priorityClassName: system-cluster-critical
+      serviceAccount: ocp4-workload-sa
+      serviceAccountName: ocp4-workload-sa
