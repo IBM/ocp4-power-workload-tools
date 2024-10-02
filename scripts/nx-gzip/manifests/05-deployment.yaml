@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: workload
-        image: quay.io/powercloud/ocp4-power-workload-tools:main
+        image: nx-gzip:latest
         imagePullPolicy: IfNotPresent
         affinity:
           nodeAffinity:
@@ -28,8 +28,7 @@ spec:
                   operator: In
                   values:
                   - true
-        command: [ "/bin/sleep" ]
-        args: [ "infinity" ]
+        command: ["nginx", "-g", "daemon off;"]
         env:
           - name: NX_GZIP_TRACE
             value: "8"
