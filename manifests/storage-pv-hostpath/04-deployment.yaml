@@ -45,7 +45,7 @@ spec:
         serviceAccount: ocp4-workload-sa
         serviceAccountName: ocp4-workload-sa
         securityContext:
-          privileged: false
+          privileged: true
           capabilities:
             drop:
               - ALL
