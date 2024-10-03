@@ -15,11 +15,11 @@ spec:
     dockerStrategy:
       from:
         kind: DockerImage
-        name: 'quay.io/fedora/nginx-126:latest'
+        name: 'quay.io/centos/centos:stream9'
   source:
     type: Dockerfile
     dockerfile: |
-      FROM quay.io/fedora/nginx-126:latest
+      FROM quay.io/centos/centos:stream9
       USER root
       RUN dnf install -y libnxz pigz
       RUN mv /usr/lib/libz.so /usr/lib/libz.so.bak
