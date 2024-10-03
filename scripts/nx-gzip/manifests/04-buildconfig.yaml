@@ -22,7 +22,7 @@ spec:
       FROM quay.io/fedora/nginx-126:latest
       USER root
       RUN dnf install -y libnxz pigz
-      RUN /usr/lib/libz.so /usr/lib/libz.so.bak
+      RUN mv /usr/lib/libz.so /usr/lib/libz.so.bak
       RUN ln -s /usr/lib/libnxz.so.0.0.64 /usr/lib/libz.so
       ENTRYPOINT ["LD_PRELOAD=/usr/lib64/libnxz.so.0", "NX_GZIP_TRACE=8", "nginx", "-g", "daemon", "off;"]
   runPolicy: Serial
