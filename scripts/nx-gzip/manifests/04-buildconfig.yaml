@@ -23,6 +23,7 @@ spec:
       USER root
       RUN dnf install -y libnxz pigz
       RUN mv /usr/lib/libz.so.1 /usr/lib/libz.so.bak
-      RUN ln -s /usr/lib/libnxz.so.0.0.64 /usr/lib/libz.so
+      RUN ln -s /usr/lib64/libnxz.so.0.0.64 /usr/lib/libz.so
+      RUN ln -s /usr/lib64/libnxz.so.0.0.64 /usr/lib64/libz.so
       ENTRYPOINT ["LD_PRELOAD=/usr/lib64/libnxz.so.0", "NX_GZIP_TRACE=8", "nginx", "-g", "daemon", "off;"]
   runPolicy: Serial
