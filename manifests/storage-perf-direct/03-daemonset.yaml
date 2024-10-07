@@ -28,16 +28,6 @@ spec:
       - name: numa-hugepages
         image: quay.io/powercloud/ocp4-power-workload-tools:main
         imagePullPolicy: IfNotPresent
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - ppc64le
-                  - amd64
         command: [ "/bin/bash" ]
         args: [ "/report-hugepages.sh"]
         resources:
@@ -65,16 +55,6 @@ spec:
       - name: numa-numa
         image: quay.io/powercloud/ocp4-power-workload-tools:main
         imagePullPolicy: IfNotPresent
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - ppc64le
-                  - amd64
         command: [ "/bin/bash" ]
         args: [ "/report-numa.sh"]
         resources:
@@ -99,20 +79,20 @@ spec:
           #runAsNonRoot: false
           readOnlyRootFilesystem: false
           allowPrivilegeEscalation: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - ppc64le
+                - amd64
       containers:
       - name: numa-workload
         image: quay.io/powercloud/ocp4-power-workload-tools:main
         imagePullPolicy: IfNotPresent
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - ppc64le
-                  - amd64
         command: [ "/bin/sleep" ]
         args: [ "infinity" ]
         resources:

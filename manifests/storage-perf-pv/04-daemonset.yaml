@@ -14,20 +14,20 @@ spec:
       labels:
         app: power-workload
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - ppc64le
+                - amd64
       containers:
       - name: workload
         image: quay.io/powercloud/ocp4-power-workload-tools:main
         imagePullPolicy: IfNotPresent
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - ppc64le
-                  - amd64
         command: [ "/bin/sleep" ]
         args: [ "infinity" ]
         resources:
