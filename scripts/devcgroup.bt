@@ -1,0 +1,16 @@
+#!/usr/bin/env bpftrace
+
+# SPDX-License-Identifier: Apache-2.0
+# inspired by https://github.com/freedge/blog/blob/44ede6a73caaaf7f8128e69eb28cfa26b37100bd/kerneltrace.md?plain=1#L55
+
+#ifndef BPFTRACE_HAVE_BTF
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/kprobes.h>
+#endif
+
+kretprobe:devcgroup_check_permission {
+  if (retval < 0) {
+    printf("PID %d, comm %s returned %ld\n", pid, comm, retval);
+  }
+}
