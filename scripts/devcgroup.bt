@@ -13,5 +13,6 @@
 kretprobe:devcgroup_check_permission {
   if (retval < 0) {
     printf("PID %d, comm %s returned %ld\n", pid, comm, retval);
+    printf("%s\n", kstack);
   }
 }
