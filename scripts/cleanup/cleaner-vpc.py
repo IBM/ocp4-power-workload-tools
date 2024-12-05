@@ -73,9 +73,9 @@ resource_controller_url = 'https://resource-controller.cloud.ibm.com'
 controller = ResourceControllerV2(authenticator=authenticator)
 controller.set_service_url(resource_controller_url)
 
-print("[VPCs] - [STARTED CLEANING]")
+print("[VPCs] - [STARTED Reporting]")
 
-print("Found the following cos instances in the resource group:")
+print("Found the following VPC instances in the resource group:")
 for resource in vpcs:
     if vpc['resource_group']['id'] == resource_group_id:
         print(resource["created_at"] + " " + resource["name"] + " " + resource["crn"])
@@ -90,4 +90,4 @@ for resource in vpcs:
     if vpc['resource_group']['id'] == resource_group_id:
         print(resource["created_at"] + " " + resource["name"] + " " + resource["crn"])
 
-print("[VPCs] - [FINISHED CLEANING]")
+print("[VPCs] - [FINISHED Reporting]")
