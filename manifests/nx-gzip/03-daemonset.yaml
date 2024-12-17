@@ -40,9 +40,9 @@ spec:
         - name: host-sys
           mountPath: /sys
         - name: host-dev
-          mountPath: /host-dev
+          mountPath: /dev
         - name: host-lib
-          mountPath: /host-lib
+          mountPath: /lib
         serviceAccount: ocp4-workload-sa
         serviceAccountName: ocp4-workload-sa
         securityContext:
