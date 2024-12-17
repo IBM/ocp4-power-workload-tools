@@ -2,4 +2,4 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: ocp4-workload-sa
-  namespace: openshift-power-workload-fio
+  namespace: nx-gzip
