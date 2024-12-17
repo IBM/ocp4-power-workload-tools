@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ocp4-nx-gzip-power-workload
+  namespace: nx-gzip
+  labels:
+    app: power-nx-gzip-workload
+spec:
+  selector:
+    matchLabels:
+      app: power-nx-gzip-workload
+  template:
+    metadata:
+      annotations:
+        openshift.io/required-scc: privileged
+        openshift.io/scc: privileged
+      labels:
+        app: power-nx-gzip-workload
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: nx-gzip-workload
+        image: quay.io/powercloud/ocp4-power-workload-tools:main
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/sleep" ]
+        args: [ "infinity" ]
+        resources:
+          limits:
+            memory: 4000Mi
+          requests:
+            cpu: 4
+            memory: 4000Mi
+        volumeMounts:
+        - name: host-sys
+          mountPath: /sys
+        - name: host-dev
+          mountPath: /host-dev
+        - name: host-lib
+          mountPath: /host-lib
+        serviceAccount: ocp4-workload-sa
+        serviceAccountName: ocp4-workload-sa
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - CAP_SYS_ADMIN
+              - CAP_FOWNER
+              - NET_ADMIN
+              - SYS_ADMIN
+            drop:
+              - ALL
+          #runAsUser: 0
+          #runAsNonRoot: false
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: true
+      volumes:
+       - name: host-sys
+         hostPath:
+           path: /sys
+           type: Directory
+       - name: host-dev
+         hostPath:
+           path: /dev
+           type: Directory
+       - name: host-lib
+         hostPath:
+           path: /lib
+           type: Directory
+      priorityClassName: system-cluster-critical
+      hostPID: true
+      hostIPC: true
+      hostNetwork: true
+      serviceAccount: ocp4-workload-sa
+      serviceAccountName: ocp4-workload-sa
