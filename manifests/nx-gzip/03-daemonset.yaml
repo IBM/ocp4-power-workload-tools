@@ -17,13 +17,6 @@ spec:
       labels:
         app: power-nx-gzip-workload
     spec:
-      tolerations:
-      - key: node-role.kubernetes.io/control-plane
-        operator: Exists
-        effect: NoSchedule
-      - key: node-role.kubernetes.io/master
-        operator: Exists
-        effect: NoSchedule
       containers:
       - name: nx-gzip-workload
         image: quay.io/powercloud/ocp4-power-workload-tools:main
@@ -40,7 +33,7 @@ spec:
         - name: host-sys
           mountPath: /sys
         - name: host-dev
-          mountPath: /dev
+          mountPath: /dev/crypto/nx-gzip
         - name: host-lib
           mountPath: /lib
         serviceAccount: ocp4-workload-sa
@@ -66,8 +59,8 @@ spec:
            type: Directory
        - name: host-dev
          hostPath:
-           path: /dev
-           type: Directory
+           path: /dev/crypto/nx-gzip
+           type: File
        - name: host-lib
          hostPath:
            path: /lib
