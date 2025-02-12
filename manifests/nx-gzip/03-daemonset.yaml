@@ -34,8 +34,6 @@ spec:
           mountPath: /sys
         - name: host-dev
           mountPath: /dev/crypto/nx-gzip
-        - name: host-lib
-          mountPath: /lib
         serviceAccount: ocp4-workload-sa
         serviceAccountName: ocp4-workload-sa
         securityContext:
@@ -61,10 +59,6 @@ spec:
          hostPath:
            path: /dev/crypto/nx-gzip
            type: File
-       - name: host-lib
-         hostPath:
-           path: /lib
-           type: Directory
       priorityClassName: system-cluster-critical
       hostPID: true
       hostIPC: true
