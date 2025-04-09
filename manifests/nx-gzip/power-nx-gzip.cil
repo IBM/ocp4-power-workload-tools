@@ -1,0 +1,4 @@
+(block nx
+    (blockinherit container)
+    (allow process container_file_t ( chr_file ( map )))
+)
