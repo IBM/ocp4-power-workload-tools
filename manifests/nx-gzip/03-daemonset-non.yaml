@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ocp4-nx-gzip-power-workload
+  namespace: nx-gzip
+  labels:
+    app: power-nx-gzip-workload
+spec:
+  selector:
+    matchLabels:
+      app: power-nx-gzip-workload
+  template:
+    metadata:
+      annotations:
+        openshift.io/required-scc: privileged
+        openshift.io/scc: privileged
+      labels:
+        app: power-nx-gzip-workload
+    spec:
+      containers:
+      - name: nx-gzip-workload
+        image: quay.io/powercloud/ocp4-power-workload-tools:main
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/sleep" ]
+        args: [ "infinity" ]
+        resources:
+          limits:
+            memory: 4000Mi
+          requests:
+            cpu: 4
+            memory: 4000Mi
+        volumeMounts:
+        - name: host-dev
+          mountPath: /dev/crypto/nx-gzip
+        serviceAccount: ocp4-workload-sa
+        serviceAccountName: ocp4-workload-sa
+        securityContext:
+          privileged: false
+          capabilities:
+            add:
+              - CAP_SYS_ADMIN
+              - CAP_FOWNER
+              - NET_ADMIN
+              - SYS_ADMIN
+            drop:
+              - ALL
+          #runAsUser: 0
+          #runAsNonRoot: false
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          seLinuxOptions:
+            type: nx.process
+      volumes:
+       - name: host-dev
+         hostPath:
+           path: /dev/crypto/nx-gzip
+           type: CharDevice
+      serviceAccount: ocp4-workload-sa
+      serviceAccountName: ocp4-workload-sa
