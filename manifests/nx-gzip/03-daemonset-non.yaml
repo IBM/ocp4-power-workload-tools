@@ -11,9 +11,6 @@ spec:
       app: power-nx-gzip-workload
   template:
     metadata:
-      annotations:
-        openshift.io/required-scc: privileged
-        openshift.io/scc: privileged
       labels:
         app: power-nx-gzip-workload
     spec:
@@ -37,11 +34,6 @@ spec:
         securityContext:
           privileged: false
           capabilities:
-            add:
-              - CAP_SYS_ADMIN
-              - CAP_FOWNER
-              - NET_ADMIN
-              - SYS_ADMIN
             drop:
               - ALL
           #runAsUser: 0
