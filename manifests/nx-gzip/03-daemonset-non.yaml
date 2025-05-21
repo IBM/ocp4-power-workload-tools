@@ -11,6 +11,8 @@ spec:
       app: power-nx-gzip-workload
   template:
     metadata:
+      annotations:
+        io.kubernetes.cri-o.Devices: /dev/crypto/nx-gzip
       labels:
         app: power-nx-gzip-workload
     spec:
@@ -26,9 +28,6 @@ spec:
           requests:
             cpu: 4
             memory: 4000Mi
-        volumeMounts:
-        - name: host-dev
-          mountPath: /dev/crypto/nx-gzip
         serviceAccount: ocp4-workload-sa
         serviceAccountName: ocp4-workload-sa
         securityContext:
@@ -40,12 +39,5 @@ spec:
           #runAsNonRoot: false
           readOnlyRootFilesystem: false
           allowPrivilegeEscalation: false
-          seLinuxOptions:
-            type: nx.process
-      volumes:
-       - name: host-dev
-         hostPath:
-           path: /dev/crypto/nx-gzip
-           type: CharDevice
       serviceAccount: ocp4-workload-sa
       serviceAccountName: ocp4-workload-sa
