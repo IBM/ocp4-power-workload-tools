@@ -1,0 +1,16 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: 'worker'
+  name: 99-worker-crio-nx-gzip
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    storage:
+      files:
+        - path: /etc/crio/crio.conf.d/99-allowed_devices
+          mode: 420
+          contents:
+            source: data:text/plain;charset=utf-8;base64,W2NyaW8ucnVudGltZV0KYWxsb3dlZF9kZXZpY2VzID0gWwogICAgIi9kZXYvY3J5cHRvL254LWd6aXAiLApdCg==
