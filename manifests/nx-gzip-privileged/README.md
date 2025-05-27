@@ -34,29 +34,23 @@ sudo mv kustomize /usr/local/bin
 kustomize -h
 ```
 
-2. Configure the worker nodes to use `/dev/crypto/nx-gzip` as an `allowed_device`.
-
-```
-oc apply -f ocp4-power-workload-tools/manifests/nx-gzip/99-worker-crio-nx-gzip.yaml
-```
-
-3. Clone the ocp4-power-workload-tools
+2. Clone the ocp4-power-workload-tools
 
 ```
 git clone https://github.com/IBM/ocp4-power-workload-tools
 cd ocp4-power-workload-tools
 ```
 
-4. Export `kubeconfig` using `export KUBECONFIG=~/.kube/config`
+3. Export `kubeconfig` using `export KUBECONFIG=~/.kube/config`
 
-5. Setup the nx-gzip test Pod as below 
+4. Setup the nx-gzip test Pod as below 
 
 ```
-cd manifests/nx-gzip
+cd manifests/nx-gzip-privileged
 kustomize build . | oc apply -f - 
 ```
 
-6. Resulting running pod as below 
+5. Resulting running pod as below 
 
 ```
 # oc get pod -n nx-gzip
@@ -64,13 +58,4 @@ NAME                                    READY   STATUS    RESTARTS   AGE
 pod/ocp4-nx-gzip-power-workload-dk7tc   1/1     Running   0          51s
 ```
 
-To test with Privileged mode, you can use `nx-gzip-privileged`.
-
-### Copy the Test artifact into the running Pod
-
-explain how to copy over the compiled binary
-
-### Run the Test Artifact
-
-explain how to setup the test file
-explain how to run it.
+To test with Privileged mode, you can use 

@@ -12,7 +12,8 @@ spec:
   template:
     metadata:
       annotations:
-        io.kubernetes.cri-o.Devices: /dev/crypto/nx-gzip
+        openshift.io/required-scc: privileged
+        openshift.io/scc: privileged
       labels:
         app: power-nx-gzip-workload
     spec:
@@ -28,16 +29,39 @@ spec:
           requests:
             cpu: 4
             memory: 4000Mi
+        volumeMounts:
+        - name: host-sys
+          mountPath: /sys
+        - name: host-dev
+          mountPath: /dev/crypto/nx-gzip
         serviceAccount: ocp4-workload-sa
         serviceAccountName: ocp4-workload-sa
         securityContext:
-          privileged: false
+          privileged: true
           capabilities:
+            add:
+              - CAP_SYS_ADMIN
+              - CAP_FOWNER
+              - NET_ADMIN
+              - SYS_ADMIN
             drop:
               - ALL
           #runAsUser: 0
           #runAsNonRoot: false
           readOnlyRootFilesystem: false
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
+      volumes:
+       - name: host-sys
+         hostPath:
+           path: /sys
+           type: Directory
+       - name: host-dev
+         hostPath:
+           path: /dev/crypto/nx-gzip
+           type: File
+      priorityClassName: system-cluster-critical
+      hostPID: true
+      hostIPC: true
+      hostNetwork: true
       serviceAccount: ocp4-workload-sa
       serviceAccountName: ocp4-workload-sa
