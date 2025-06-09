@@ -37,5 +37,5 @@ spec:
               - ALL
           readOnlyRootFilesystem: false
           allowPrivilegeEscalation: false
-      serviceAccount: ocp4-workload-sa
-      serviceAccountName: ocp4-workload-sa
+      serviceAccount: nx-gzip-sa
+      serviceAccountName: nx-gzip-sa
