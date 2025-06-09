@@ -79,7 +79,7 @@ To test with Privileged mode, you can use `nx-gzip-privileged`.
 1. Copy the above created executable files to the running pod 
 
 ```
-# oc cp gzfht_test nx-gzip-ds-2mlmh:/tmp/
+# oc cp gzfht_test nx-gzip-ds-2mlmh:/nx-test/
 ```
 
 2. Access the pod shell and confirm the Model name is Power10 or higher.
@@ -94,7 +94,7 @@ Model:                                2.0 (pvr 0080 0200)
 3. Create a test file for testing 
 
 ```
-sh-5.1# dd if=/dev/random of=/tmp/test bs=1M count=1
+sh-5.1# dd if=/dev/random of=/nx-test/test bs=1M count=1
 1+0 records in
 1+0 records out
 1048576 bytes (1.0 MB, 1.0 MiB) copied, 0.00431494 s, 243 MB/s
@@ -105,8 +105,8 @@ sh-5.1#
 4. Run the tests in pod 
 
 ```
-sh-5.1# /tmp/gzfht_test /tmp/test
-file /tmp/test read, 1048576 bytes
+sh-5.1# /nx-test/gzfht_test /nx-test/test
+file /nx-test/test read, 1048576 bytes
 compressed 1048576 to 1105994 bytes total, crc32 checksum = a094fbab
 sh-5.1# echo $?
 0
