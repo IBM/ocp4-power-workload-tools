@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: nx-gzip-ds
-  namespace: nx-gzip
+  namespace: nx-gzip-demo
   labels:
     app: power-nx-gzip-workload
 spec:
