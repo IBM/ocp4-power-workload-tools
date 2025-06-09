@@ -37,14 +37,10 @@ spec:
           requests:
             cpu: 4
             memory: 4000Mi
-        serviceAccount: nx-gzip-sa
-        serviceAccountName: nx-gzip-sa
         securityContext:
           privileged: false
           capabilities:
             drop:
               - ALL
-          readOnlyRootFilesystem: false
+          readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
-      serviceAccount: nx-gzip-sa
-      serviceAccountName: nx-gzip-sa

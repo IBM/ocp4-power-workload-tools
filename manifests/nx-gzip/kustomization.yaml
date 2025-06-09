@@ -12,6 +12,4 @@ sortOptions:
 
 resources:
   - 00-project.yaml
-  - 01-sa.yaml
-  - 02-rbac.yaml
-  - 03-daemonset.yaml
+  - 01-daemonset.yaml
