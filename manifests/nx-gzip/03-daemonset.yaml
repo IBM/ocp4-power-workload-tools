@@ -16,17 +16,17 @@ spec:
       labels:
         app: power-nx-gzip-workload
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/worker
+                operator: Exists
       containers:
       - name: nx-gzip-workload
         image: quay.io/powercloud/ocp4-power-workload-tools:main
         imagePullPolicy: IfNotPresent
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: node-role.kubernetes.io/worker
-                  operator: Exists
         command: [ "/bin/sleep" ]
         args: [ "infinity" ]
         resources:
