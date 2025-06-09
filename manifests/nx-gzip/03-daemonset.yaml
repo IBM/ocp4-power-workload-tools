@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: ocp4-nx-gzip-power-workload
+  name: nx-gzip-ds
   namespace: nx-gzip
   labels:
     app: power-nx-gzip-workload
@@ -28,8 +28,8 @@ spec:
           requests:
             cpu: 4
             memory: 4000Mi
-        serviceAccount: ocp4-workload-sa
-        serviceAccountName: ocp4-workload-sa
+        serviceAccount: nx-gzip-sa
+        serviceAccountName: nx-gzip-sa
         securityContext:
           privileged: false
           capabilities:

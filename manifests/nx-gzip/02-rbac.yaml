@@ -1,13 +1,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: ocp4-workload-nx-gzip
-  namespace: nx-gzip
+  name: nx-gzip-crb
+  namespace: nx-gzip-demo
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin
+  name: system:openshift:scc:anyuid
 subjects:
 - kind: ServiceAccount
-  name: ocp4-workload-sa
-  namespace: nx-gzip
+  name: nx-gzip-sa
+  namespace: nx-gzip-demo

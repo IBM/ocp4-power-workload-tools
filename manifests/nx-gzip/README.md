@@ -59,7 +59,7 @@ kustomize build . | oc apply -f -
 6. Resulting running pod as below 
 
 ```
-# oc get pod -n nx-gzip
+# oc get pod -n nx-gzip-demo
 NAME                                    READY   STATUS    RESTARTS   AGE
 pod/ocp4-nx-gzip-power-workload-dk7tc   1/1     Running   0          51s
 ```
