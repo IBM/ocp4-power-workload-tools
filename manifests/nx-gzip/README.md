@@ -1,6 +1,6 @@
 This document demonstrate using the NX-GZip feature in a non-privileged container. You must have deployed a cluster with workers with a processor compatibility of IBM Power 10 or higher. The *Active Memory Expansion* feature must be licensed.
 
-### Build the power-gzip test binary
+### Build the power-gzip selftest binary
 
 1. Login to the PowerVM instance running Red Hat Enterprise Linux 9
 2. Install required build binaries
@@ -27,10 +27,9 @@ make
 5. Find the created test files
 
 ```
-> ls
-gzfht_test
-gunz_test
-
+# ls g*test -al
+-rwxr-xr-x. 1 root root 74992 Jun  9 08:24 gunz_test
+-rwxr-xr-x. 1 root root 74888 Jun  9 08:24 gzfht_test
 ```
 
 ### Setup the NX-GZip test deployment
@@ -69,8 +68,8 @@ kustomize build . | oc apply -f -
 
 ```
 # oc get pod -n nx-gzip-demo
-NAME                                    READY   STATUS    RESTARTS   AGE
-pod/ocp4-nx-gzip-power-workload-82hqb   1/1     Running   0          51s
+NAME               READY   STATUS    RESTARTS   AGE
+nx-gzip-ds-2mlmh   1/1     Running   0          3s
 ```
 
 To test with Privileged mode, you can use `nx-gzip-privileged`.
@@ -80,22 +79,22 @@ To test with Privileged mode, you can use `nx-gzip-privileged`.
 1. Copy the above created executable files to the running pod 
 
 ```
-# oc cp gzfht_test ocp4-nx-gzip-power-workload-b97jx:/tmp/
+# oc cp gzfht_test nx-gzip-ds-2mlmh:/tmp/
 ```
 
-2. Access the pod shell 
+2. Access the pod shell and confirm the Model name is Power10 or higher.
 
 ```
-# oc rsh ocp4-nx-gzip-power-workload-b97jx
-sh-5.1#
+# oc rsh nx-gzip-ds-2mlmh
+sh-5.1# lscpu | grep Model
+Model name:                           POWER10 (architected), altivec supported
+Model:                                2.0 (pvr 0080 0200)
 ```
 
 3. Create a test file for testing 
 
 ```
-sh-5.1# cd /tmp/
-sh-5.1#
-sh-5.1# dd if=/dev/random of=test bs=1M count=1
+sh-5.1# dd if=/dev/random of=/tmp/test bs=1M count=1
 1+0 records in
 1+0 records out
 1048576 bytes (1.0 MB, 1.0 MiB) copied, 0.00431494 s, 243 MB/s
@@ -106,9 +105,13 @@ sh-5.1#
 4. Run the tests in pod 
 
 ```
-sh-5.1#  ./gzfht_test test
-file test read, 1048576 bytes
-compressed 1048576 to 1105823 bytes total, crc32 checksum = 9b75f9f7
+sh-5.1# /tmp/gzfht_test /tmp/test
+file /tmp/test read, 1048576 bytes
+compressed 1048576 to 1105994 bytes total, crc32 checksum = a094fbab
+sh-5.1# echo $?
+0
 ```
 
-If it shows as compressed and as above then its considered as PASS.
+If it shows as `compressed` and the return code is `0` and as above then its considered as PASS.
+
+Thank you for your time and good luck.
