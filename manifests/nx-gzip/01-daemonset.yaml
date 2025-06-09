@@ -33,10 +33,13 @@ spec:
         args: [ "infinity" ]
         resources:
           limits:
-            memory: 4000Mi
+            memory: 512Mi
           requests:
             cpu: 4
-            memory: 4000Mi
+            memory: 512Mi
+        volumeMounts:
+        - name: test-vol
+          mountPath: /nx-test
         securityContext:
           privileged: false
           capabilities:
@@ -44,3 +47,6 @@ spec:
               - ALL
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
+      volumes:
+      - name: test-vol
+        emptyDir: {}
