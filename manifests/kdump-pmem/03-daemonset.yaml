@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kdump-pmem-setup
+  namespace: kdump-pmem-setup
+  labels:
+    app: kdump-pmem-setup
+spec:
+  selector:
+    matchLabels:
+      app: kdump-pmem-setup
+  template:
+    metadata:
+      annotations:
+        openshift.io/required-scc: privileged
+        openshift.io/scc: privileged
+      labels:
+        app: kdump-pmem-setup
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - ppc64le
+      containers:
+      - name: pmem-setup
+        image: quay.io/powercloud/ocp4-power-workload-tools:main
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/sleep" ]
+        args: [ "infinity" ]
+        resources:
+          limits:
+            memory: 1000Mi
+          requests:
+            cpu: 1
+            memory: 1000Mi
+        volumeMounts:
+        - name: host-sys
+          mountPath: /sys
+        serviceAccount: ocp4-kdump-pmem-setup-sa
+        serviceAccountName: ocp4-kdump-pmem-setup-sa
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - CAP_SYS_ADMIN
+              - CAP_FOWNER
+              - NET_ADMIN
+              - SYS_ADMIN
+            drop:
+              - ALL
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: true
+      volumes:
+       - name: host-sys
+         hostPath:
+           path: /sys
+           type: Directory
+      priorityClassName: system-cluster-critical
+      hostPID: true
+      hostIPC: true
+      hostNetwork: true
+      serviceAccount: ocp4-kdump-pmem-setup-sa
+      serviceAccountName: ocp4-kdump-pmem-setup-sa
