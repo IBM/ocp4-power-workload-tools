@@ -68,7 +68,7 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@9a57217389f1c89cb7c6bf96972f839d187aaf5b
+        uses: docker/build-push-action@7d03e66b5f24d6b390ab64b132795fd3ef4152c8
         with:
           context: .
           # Add linux/amd64, when using in Multi-Arch Compute
