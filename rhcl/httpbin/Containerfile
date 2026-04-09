@@ -1,6 +1,6 @@
 FROM quay.io/fedora/fedora-minimal:44
 
-# Update if you need... microdnf update -y && \
+# Update if you need... microdnf update -y
 
 RUN microdnf install -y python3.14 python3.14-pip && \
     python3.14 --version && \

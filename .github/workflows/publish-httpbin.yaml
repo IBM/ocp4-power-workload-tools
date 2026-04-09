@@ -9,7 +9,7 @@ on:
   push:
     tags: [ 'v*.*.*' ]
     paths:
-      - 'rhcl/httpbin' 
+      - 'rhcl/httpbin/**' 
 
 env:
   # Use docker.io for Docker Hub if empty
