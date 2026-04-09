@@ -68,7 +68,7 @@ jobs:
           containerfiles: |
             ./rhcl/httpbin/Containerfile
           tags: latest # ${{ steps.meta.outputs.tags }}
-          image: quay.io/pbastide_rh/httpbin-ppc64le
+          image: httpbin-ppc64le
           layers: false
           oci: true
 
@@ -77,7 +77,7 @@ jobs:
         id: push-to-quay
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ steps.build-image.outputs.image }}
+          image: httpbin-ppc64le
           tags: latest
           registry: quay.io/pbastide_rh/httpbin-ppc64le
           username: ${{ secrets.HTTPBIN_USER }}
