@@ -1,4 +1,4 @@
-name: Docker
+name: Publish httpbin
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -9,6 +9,7 @@ on:
   push:
     tags: [ 'v*.*.*' ]
     paths:
+      - '.github/workflows/publish-httpbin.yaml'
       - 'rhcl/httpbin/**' 
 
 env:

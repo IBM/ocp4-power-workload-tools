@@ -1,4 +1,4 @@
-name: Docker
+name: Publish NUMA Analysis Tools
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -10,6 +10,7 @@ on:
     tags: [ 'v*.*.*' ]
     paths:
       - 'numa/**'
+      - '.github/workflows/publish.yaml'
 
 env:
   # Use docker.io for Docker Hub if empty
