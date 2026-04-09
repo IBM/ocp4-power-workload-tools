@@ -1,0 +1,9 @@
+apiVersion: config.openshift.io/v1
+kind: ImageTagMirrorSet
+metadata:
+  name: httpbin-itms
+spec:
+  imageTagMirrors:
+  - mirrors:
+    - quay.io/pbastide_rh/httpbin-ppc64le
+    source: quay.io/rhn_support_azgabur/httpbin
