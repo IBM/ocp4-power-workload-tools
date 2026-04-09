@@ -1,7 +1,8 @@
 FROM quay.io/fedora/fedora-minimal:44
 
-RUN microdnf update -y && \
-    microdnf install -y python3.14 python3.14-pip && \
+# Update if you need... microdnf update -y && \
+
+RUN microdnf install -y python3.14 python3.14-pip && \
     python3.14 --version && \
     pip install --no-cache-dir httpbin gunicorn
 
