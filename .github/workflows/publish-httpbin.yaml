@@ -13,13 +13,13 @@ on:
     paths-ignore:
       - 'manifests/**'
       - 'README.md'
-      - 'rhcl/httpbin'
+      - 'Containerfile-numa'
 
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: quay.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: powercloud/ocp4-power-workload-tools
+  IMAGE_NAME: pbastide_rh/httpbin-ppc64le
 
 jobs:
   build:
@@ -54,8 +54,8 @@ jobs:
         uses: docker/login-action@ba754150c9dbbaa912ae0ac3cfba43f84195cef2
         with:
           registry: quay.io
-          username: ${{ secrets.QUAY_USER }}
-          password: ${{ secrets.QUAY_TOKEN }}
+          username: ${{ secrets.HTTPBIN_USER }}
+          password: ${{ secrets.HTTPBIN_TOKEN }}
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -73,8 +73,8 @@ jobs:
         with:
           context: .
           # Add linux/amd64, when using in Multi-Arch Compute
-          platforms: linux/ppc64le,linux/amd64
-          file: Containerfile-numa
+          platforms: linux/ppc64le,linux/s390x
+          file: rhcl/httpbin/Containerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
