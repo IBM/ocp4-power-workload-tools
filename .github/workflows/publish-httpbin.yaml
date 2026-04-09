@@ -50,7 +50,7 @@ jobs:
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@ba754150c9dbbaa912ae0ac3cfba43f84195cef2
+        uses: redhat-actions/podman-login@v1
         with:
           registry: quay.io
           username: ${{ secrets.HTTPBIN_USER }}
@@ -67,13 +67,23 @@ jobs:
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
-        id: build-and-push
-        uses: docker/build-push-action@ef1fb9688fc3626d0fd5e462f502cbbdc6456feb
+        id: build
+        uses: redhat-actions/buildah-build@v2
         with:
           context: rhcl/httpbin
-          # Add linux/amd64, when using in Multi-Arch Compute
           platforms: linux/ppc64le
-          file: rhcl/httpbin/Containerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          containerfiles: |
+            ./rhcl/httpbin/Containerfile
           tags: latest # ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Push To quay.io
+        if: github.event_name != 'pull_request'
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: latest
+          registry: quay.io/pbastide_rh/httpbin-ppc64le
+          username: ${{ secrets.HTTPBIN_USER }}
+          password: ${{ secrets.HTTPBIN_TOKEN }}
