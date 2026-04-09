@@ -44,6 +44,7 @@ jobs:
 
       - name: Install QEMU dependency for multi-arch builds
         run: |
+          sudo apt-get update -y
           sudo apt-get install -y qemu-user-static
 
       # Login against a Docker registry except on PR
