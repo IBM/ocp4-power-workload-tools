@@ -7,8 +7,6 @@ name: Docker
 
 on:
   push:
-    branches: [ "main" ]
-    # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
     paths:
       - 'rhcl/httpbin' 
@@ -69,7 +67,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@ef1fb9688fc3626d0fd5e462f502cbbdc6456feb
         with:
-          context: .
+          context: rhcl/httpbin
           # Add linux/amd64, when using in Multi-Arch Compute
           platforms: linux/ppc64le,linux/s390x
           file: rhcl/httpbin/Containerfile
