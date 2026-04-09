@@ -72,7 +72,7 @@ jobs:
         with:
           context: rhcl/httpbin
           # Add linux/amd64, when using in Multi-Arch Compute
-          platforms: linux/ppc64le,linux/s390x
+          platforms: linux/ppc64le
           file: rhcl/httpbin/Containerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}

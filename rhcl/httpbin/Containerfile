@@ -4,7 +4,10 @@ FROM quay.io/fedora/fedora-minimal:45
 
 RUN microdnf install -y python3.14 python3.14-pip && \
     python3.14 --version && \
-    pip install --no-cache-dir httpbin gunicorn
+    pip install attrs==26.1.0 \
+    --extra-index-url=https://wheels.developerfirst.ibm.com/ppc64le/linux \
+    --prefer-binary && \
+    pip install --no-cache-dir httpbin
 
 EXPOSE 8080
 CMD ["gunicorn", "-b", "0.0.0.0:8080", "httpbin:app"]
