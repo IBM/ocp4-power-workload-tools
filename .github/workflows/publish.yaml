@@ -7,6 +7,8 @@ name: Publish NUMA Analysis Tools
 
 on:
   push:
+    branches:
+      - main
     tags: [ 'v*.*.*' ]
     paths:
       - 'numa/**'
