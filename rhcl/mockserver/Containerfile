@@ -17,7 +17,8 @@ ENV container=oci \
 WORKDIR /home/fedora
 
 # Download the MockServer JAR
-ADD --chown=fedora:root https://oss.sonatype.org/service/local/artifact/maven/redirect?r=releases&g=org.mock-server&a=mockserver-netty&c=jar-with-dependencies&e=jar&v=RELEASE /home/fedora/mockserver.jar
+RUN curl "https://repo.maven.apache.org/maven2/org/mock-server/mockserver-netty/5.9.0/mockserver-netty-5.9.0-jar-with-dependencies.jar" -L -o /home/fedora/mockserver.jar && \
+    chown fedora:root /home/fedora/mockserver.jar
 
 # Copy local entrypoint script and other files
 COPY --chown=fedora:root . .
