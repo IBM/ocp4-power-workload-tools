@@ -16,6 +16,8 @@ WORKDIR /workspace/llm-d-inference-sim-0.8.2
 # and so that source changes don't invalidate our downloaded layer
 RUN go mod download
 
+RUN cp cmd/llm-d-inference-sim/main.go cmd/cmd.go
+
 # Build simulator, no Python, no embedded tokenizer, no CGO for ZMQ, use pure Go
 # The default kv-cache build uses UDS tokenizer (//go:build !embedded_tokenizers)
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o bin/llm-d-inference-sim ./cmd/cmd.go

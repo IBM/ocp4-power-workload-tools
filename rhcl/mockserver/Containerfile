@@ -5,7 +5,7 @@ ARG user=fedora
 
 # Install dependencies using microdnf (standard for fedora-minimal)
 RUN microdnf -y update \
-    && microdnf install -y java-25-openjdk-headless.ppc64le openssl shadow-utils \
+    && microdnf install -y java-latest-openjdk-headless openssl shadow-utils \
     && microdnf clean all
 
 # Create the user and set up environment
