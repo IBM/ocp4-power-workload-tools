@@ -11,13 +11,11 @@ RUN curl -O -L https://github.com/llm-d/llm-d-inference-sim/archive/refs/tags/v0
     unzip v0.8.2.zip && \
     find .
 
+WORKDIR /workspace/llm-d-inference-sim-0.8.2
+
 # cache deps before building and copying source so that we don't need to re-download as much
 # and so that source changes don't invalidate our downloaded layer
 RUN go mod download
-
-# Copy the go source
-COPY cmd/llm-d-inference-sim/main.go cmd/cmd.go
-COPY . .
 
 # Build simulator, no Python, no embedded tokenizer, no CGO for ZMQ, use pure Go
 # The default kv-cache build uses UDS tokenizer (//go:build !embedded_tokenizers)
@@ -27,7 +25,7 @@ FROM registry.access.redhat.com/ubi10/ubi-micro:latest
 
 WORKDIR /
 
-COPY --from=builder /workspace/bin/llm-d-inference-sim /app/llm-d-inference-sim
+COPY --from=builder /workspace/llm-d-inference-sim-0.8.2/bin/llm-d-inference-sim /app/llm-d-inference-sim
 
 USER 65532:65532
 
