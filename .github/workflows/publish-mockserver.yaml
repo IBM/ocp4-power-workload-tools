@@ -64,7 +64,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           context: rhcl/mockserver
-          platforms: linux/ppc64le,linux,s390x
+          platforms: linux/ppc64le,linux/s390x
           containerfiles: |
             ./rhcl/mockserver/Containerfile
           tags: latest ${{ github.sha }}
