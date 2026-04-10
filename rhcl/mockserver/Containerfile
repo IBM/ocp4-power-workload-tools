@@ -1,0 +1,17 @@
+FROM quay.io/fedora/fedora-minimal:45
+
+# Update if you need... microdnf update -y
+
+RUN microdnf install -y python3.13 python-pip && \
+    python3.13 --version
+
+RUN pip install gunicorn==23.0.0+ppc64le1 \
+    --extra-index-url=https://wheels.developerfirst.ibm.com/ppc64le/linux \
+    --prefer-binary --no-cache-dir
+
+RUN pip install --no-cache-dir httpbin \
+    --extra-index-url=https://wheels.developerfirst.ibm.com/ppc64le/linux \
+    --prefer-binary --no-cache-dir
+
+EXPOSE 8080
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "httpbin:app"]
