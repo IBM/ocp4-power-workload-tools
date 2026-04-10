@@ -7,6 +7,7 @@ ARG TARGETARCH
 WORKDIR /workspace
 
 RUN curl -O -L https://github.com/llm-d/llm-d-inference-sim/archive/refs/tags/v0.8.2.zip && \
+    microdnf install unzip && \
     unzip v0.8.2.zip && \
     find .
 
