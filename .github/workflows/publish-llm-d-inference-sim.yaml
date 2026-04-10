@@ -47,7 +47,7 @@ jobs:
               unzip v0.8.2.zip && \
           cd llm-d-inference-sim-0.8.2 && \
           cp cmd/llm-d-inference-sim/main.go cmd/cmd.go && \
-          CGO_ENABLED=0 GOOS=linux GOARCH=ppc64le go build -o bin/llm-d-inference-sim-ppc64e ./cmd/cmd.go && \
+          CGO_ENABLED=0 GOOS=linux GOARCH=ppc64le go build -o bin/llm-d-inference-sim-ppc64le ./cmd/cmd.go && \
           CGO_ENABLED=0 GOOS=linux GOARCH=s390x go build -o bin/llm-d-inference-sim-s390x ./cmd/cmd.go
           ls -al bin/
           pwd
