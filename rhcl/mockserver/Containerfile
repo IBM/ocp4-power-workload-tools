@@ -1,17 +1,31 @@
 FROM quay.io/fedora/fedora-minimal:45
 
-# Update if you need... microdnf update -y
+# Define the user as a build argument
+ARG user=fedora
 
-RUN microdnf install -y python3.13 python-pip && \
-    python3.13 --version
+# Install dependencies using microdnf (standard for fedora-minimal)
+RUN microdnf -y update \
+    && microdnf install -y java-11-openjdk-headless openssl shadow-utils \
+    && microdnf clean all
 
-RUN pip install gunicorn==23.0.0+ppc64le1 \
-    --extra-index-url=https://wheels.developerfirst.ibm.com/ppc64le/linux \
-    --prefer-binary --no-cache-dir
+# Create the user and set up environment
+RUN useradd $user -g root
+ENV container=oci \
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-RUN pip install --no-cache-dir httpbin \
-    --extra-index-url=https://wheels.developerfirst.ibm.com/ppc64le/linux \
-    --prefer-binary --no-cache-dir
+# Set working directory
+WORKDIR /home/fedora
 
-EXPOSE 8080
-CMD ["gunicorn", "-b", "0.0.0.0:8080", "httpbin:app"]
+# Download the MockServer JAR
+ADD --chown=fedora:root https://oss.sonatype.org/service/local/artifact/maven/redirect?r=releases&g=org.mock-server&a=mockserver-netty&c=jar-with-dependencies&e=jar&v=RELEASE /home/fedora/mockserver.jar
+
+# Copy local entrypoint script and other files
+COPY --chown=fedora:root . .
+
+# Set permissions as per original image history
+RUN chmod ug+rwx . && chmod ug+r mockserver.jar
+
+# Final configuration
+USER fedora
+EXPOSE 1080/tcp
+CMD ["./entrypoint"]
