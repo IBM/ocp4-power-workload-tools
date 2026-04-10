@@ -81,7 +81,7 @@ jobs:
         id: build-image
         uses: redhat-actions/buildah-build@v2
         with:
-          context: rhcl/llm-d-inference-sim
+          context: .
           platforms: linux/ppc64le,linux,s390x
           containerfiles: |
             ./rhcl/llm-d-inference-sim/Containerfile
