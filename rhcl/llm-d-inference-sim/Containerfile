@@ -4,7 +4,7 @@ WORKDIR /
 
 ADD tmp/llm-d-inference-sim-0.8.2/bin/llm-d-inference-sim-* /app/
 
-RUN mv tmp/llm-d-inference-sim-0.8.2/bin/llm-d-inference-sim-$(arch) llm-d-inference-sim
+RUN mv /app/llm-d-inference-sim-$(arch) llm-d-inference-sim
 
 USER 65532:65532
 
