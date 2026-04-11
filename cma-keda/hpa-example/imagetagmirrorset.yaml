@@ -1,0 +1,9 @@
+apiVersion: config.openshift.io/v1
+kind: ImageTagMirrorSet
+metadata:
+  name: hpa-example-itms
+spec:
+  imageTagMirrors:
+  - mirrors:
+    - quay.io/pbastide_rh/hpa-example-ppc64le
+    source: registry.k8s.io/hpa-example

@@ -1,4 +1,4 @@
-name: Publish rhcl/httpbin
+name: Publish keda/hpa-example
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -11,14 +11,14 @@ on:
       - main
     tags: [ 'v*.*.*' ]
     paths:
-      - '.github/workflows/publish-httpbin.yaml'
-      - 'rhcl/httpbin/**'
+      - '.github/workflows/publish-keda.yaml'
+      - 'cma-keda/hpa-example/**'
 
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: quay.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: pbastide_rh/httpbin-ppc64le
+  IMAGE_NAME: pbastide_rh/hpa-example-ppc64le
 
 jobs:
   build:
@@ -63,12 +63,12 @@ jobs:
         id: build-image
         uses: redhat-actions/buildah-build@v2
         with:
-          context: rhcl/httpbin
-          platforms: linux/ppc64le
+          context: cma-keda/hpa-example
+          platforms: linux/ppc64le,linux/s390x
           containerfiles: |
-            ./rhcl/httpbin/Containerfile
+            ./cma-keda/hpa-example/Containerfile
           tags: latest ${{ github.sha }}
-          image: httpbin-ppc64le
+          image: hpa-example-ppc64le
           layers: false
           oci: true
 

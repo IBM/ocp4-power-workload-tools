@@ -1,0 +1,15 @@
+FROM quay.io/fedora/fedora-minimal:45
+
+# Install only PHP CLI
+RUN microdnf -y install php-cli && \
+    microdnf clean all
+
+# Copy PHP script
+COPY index.php /app/index.php
+WORKDIR /app
+
+# Use PHP built-in web server 
+
+EXPOSE 80
+USER 1001
+CMD ["php", "-S", "0.0.0.0:80", "index.php"]
