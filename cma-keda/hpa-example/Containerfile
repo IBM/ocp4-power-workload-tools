@@ -12,4 +12,4 @@ WORKDIR /app
 
 EXPOSE 80
 USER 1001
-CMD ["php", "-S", "0.0.0.0:80", "index.php"]
+CMD ["php", "-S", "0.0.0.0:80", "index.php", "2>&1", ">", "/dev/null"]
