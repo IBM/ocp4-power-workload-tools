@@ -1,15 +1,12 @@
 FROM quay.io/fedora/fedora-minimal:45
 
 # Install only PHP CLI
-RUN microdnf -y install php-cli && \
-    microdnf clean all
+RUN microdnf install -y python3.13 python-pip && \
+    python3.13 --version
 
-# Copy PHP script
-COPY index.php /app/index.php
-WORKDIR /app
-
-# Use PHP built-in web server 
-
+COPY main.py .
+USER 0
+RUN chmod 755 main.py
 EXPOSE 80
 USER 1001
-CMD ["php", "-S", "0.0.0.0:80", "index.php", "2>&1", ">", "/dev/null"]
+CMD ["python3", "main.py"]
