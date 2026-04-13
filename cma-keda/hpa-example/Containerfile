@@ -1,8 +1,7 @@
 FROM quay.io/fedora/fedora-minimal:45
 
-# Install Python and pip for psutil dependency
-RUN microdnf install -y python3.13 python3-pip && \
-    pip3 install --no-cache-dir psutil && \
+# Install Python (uses stdlib + /proc for memory monitoring)
+RUN microdnf install -y python3.13 && \
     microdnf clean all && \
     rm -rf /var/cache/yum
 

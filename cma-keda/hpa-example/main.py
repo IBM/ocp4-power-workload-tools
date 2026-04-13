@@ -1,7 +1,7 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import math
 import gc
-import psutil
+import os
 import threading
 import time
 
@@ -10,14 +10,27 @@ MEMORY_THRESHOLD_MB = 12
 THRESHOLD_DURATION_SECONDS = 90
 memory_over_threshold_start = None
 
+def get_memory_usage_mb():
+    """Get current process memory usage in MB using /proc filesystem"""
+    try:
+        with open('/proc/self/status', 'r') as f:
+            for line in f:
+                if line.startswith('VmRSS:'):
+                    # VmRSS is in kB, convert to MB
+                    memory_kb = int(line.split()[1])
+                    return memory_kb / 1024
+    except Exception as e:
+        print(f'Error reading memory: {e}')
+        return 0
+    return 0
+
 def monitor_memory():
     """Monitor memory usage and trigger GC if over threshold for specified duration"""
     global memory_over_threshold_start
     
     while True:
         try:
-            process = psutil.Process()
-            memory_mb = process.memory_info().rss / (1024 * 1024)  # Convert to MB
+            memory_mb = get_memory_usage_mb()
             
             if memory_mb > MEMORY_THRESHOLD_MB:
                 if memory_over_threshold_start is None:
@@ -28,7 +41,7 @@ def monitor_memory():
                     if duration >= THRESHOLD_DURATION_SECONDS:
                         print(f'Memory over threshold for {duration:.0f}s, running full GC')
                         gc.collect()
-                        memory_after = process.memory_info().rss / (1024 * 1024)
+                        memory_after = get_memory_usage_mb()
                         print(f'GC complete: {memory_mb:.2f}MB -> {memory_after:.2f}MB')
                         memory_over_threshold_start = None
             else:
