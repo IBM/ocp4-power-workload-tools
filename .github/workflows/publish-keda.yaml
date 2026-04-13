@@ -57,6 +57,20 @@ jobs:
           username: ${{ secrets.HTTPBIN_USER }}
           password: ${{ secrets.HTTPBIN_TOKEN }}
 
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.x'
+
+      - name: Build the binaries
+        run: |
+          set -ex && mkdir -p tmp/ && \
+          cd ./cma-keda/hpa-example/ && \
+          CGO_ENABLED=0 GOOS=linux GOARCH=ppc64le go build -o hpa-example-ppc64le main.go && \
+          CGO_ENABLED=0 GOOS=linux GOARCH=s390x go build -o hpa-example-s390x main.go && \
+          ls -al bin/
+          pwd
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build Image

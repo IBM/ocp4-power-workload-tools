@@ -1,12 +1,8 @@
-FROM golang:1.24 AS builder
-
-WORKDIR /src
-COPY main.go .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=ppc64le go build -o /out/hpa-example main.go
-
 FROM gcr.io/distroless/static-debian13:latest
 
-COPY --from=builder /out/hpa-example /usr/local/bin/hpa-example
+ADD hpa-example-* /usr/local/bin/
+RUN mv /usr/local/bin/hpa-example-$(arch) hpa-example && \
+    chmod +x /usr/local/bin/hpa-example
 
 EXPOSE 80
 USER 1001
