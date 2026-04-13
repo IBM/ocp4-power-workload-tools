@@ -1,47 +1,12 @@
-# spicedb/Dockerfile
+FROM registry.access.redhat.com/ubi10/ubi-micro:latest
 
-FROM golang:1.26 AS spicedb-builder
+ADD tmp/spicedb/spicedb-1.51.0/spicedb-* /usr/local/bin
+ADD tmp/grpc-health-probe/grpc-health-probe-main/grpc_health_probe-* /usr/local/bin
 
-ENV GOARCH=ppc64le \
-    GOOS=linux \
-    CGO_ENABLED=0
+RUN mv /usr/local/bin/spicedb-$(arch) /usr/local/bin/spicedb
+RUN mv /usr/local/bin/grpc_health_probe-$(arch) /usr/local/bin/grpc_health_probe
 
-WORKDIR /go/src/app
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git make ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
-
-# Clone the specific release tag you want
-
-RUN git clone https://github.com/authzed/spicedb.git .
-
-RUN go build \
-    -tags memoryprotection \
-    -ldflags="-checklinkname=0 -w -s" \
-    -o /spicedb \
-    ./cmd/spicedb
-
-FROM golang:1.26 AS health-probe-builder
-
-ENV GOARCH=ppc64le \
-    GOOS=linux \
-    CGO_ENABLED=0
-
-WORKDIR /go/src/app
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git make ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN git clone https://github.com/authzed/grpc-health-probe.git .
-RUN git checkout main
-RUN go install -a -tags netgo -ldflags="-w" .
-
-FROM registry.access.redhat.com/ubi9/ubi-micro:latest
-
-COPY --from=spicedb-builder /spicedb /usr/local/bin/spicedb
-COPY --from=health-probe-builder /go/bin/grpc-health-probe /bin/grpc_health_probe
+USER 65532:65532
 
 EXPOSE 50051
 ENTRYPOINT ["/usr/local/bin/spicedb"]
