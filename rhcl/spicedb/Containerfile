@@ -1,7 +1,7 @@
 FROM registry.access.redhat.com/ubi10/ubi-micro:latest
 
-ADD tmp/spicedb/spicedb-1.51.0/spicedb-* /usr/local/bin
-ADD tmp/grpc-health-probe/grpc-health-probe-main/grpc_health_probe-* /usr/local/bin
+ADD ./rhcl/spicedb/tmp/spicedb/spicedb-1.51.0/spicedb-* /usr/local/bin
+ADD ./rhcl/spicedb/tmp/grpc-health-probe/grpc-health-probe-main/grpc_health_probe-* /usr/local/bin
 
 RUN mv /usr/local/bin/spicedb-$(arch) /usr/local/bin/spicedb
 RUN mv /usr/local/bin/grpc_health_probe-$(arch) /usr/local/bin/grpc_health_probe
