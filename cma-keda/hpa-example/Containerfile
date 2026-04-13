@@ -1,7 +1,8 @@
 FROM quay.io/fedora/fedora-minimal:45
 
-# Install Python (no pip needed - only uses stdlib)
-RUN microdnf install -y python3.13 && \
+# Install Python and pip for psutil dependency
+RUN microdnf install -y python3.13 python3-pip && \
+    pip3 install --no-cache-dir psutil && \
     microdnf clean all && \
     rm -rf /var/cache/yum
 
@@ -10,4 +11,4 @@ COPY --chmod=755 main.py .
 EXPOSE 80
 USER 1001
 
-CMD ["/usr/bin/python3.13", "main.py"]
+CMD ["python3", "main.py"]
