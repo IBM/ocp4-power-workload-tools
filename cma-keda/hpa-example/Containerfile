@@ -10,4 +10,4 @@ COPY --chmod=755 main.py .
 EXPOSE 80
 USER 1001
 
-CMD ["python3", "main.py"]
+CMD ["/usr/bin/python3.13", "main.py"]
