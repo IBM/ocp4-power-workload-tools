@@ -122,5 +122,3 @@ func main() {
 
 	log.Fatal(server.ListenAndServe())
 }
-
-// Made with Bob
