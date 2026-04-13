@@ -41,7 +41,7 @@ jobs:
 
       - name: Build the binaries
         run: |
-          cd rhcl/spicedb/tmp
+          cd rhcl/spicedb/
           bash build-noncgo.sh
 
       # Install the cosign tool except on PR
