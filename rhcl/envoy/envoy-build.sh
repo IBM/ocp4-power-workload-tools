@@ -10,7 +10,7 @@ PACKAGE_URL=https://github.com/${PACKAGE_ORG}/${PACKAGE_NAME}
 PACKAGE_VERSION_WO_V="${PACKAGE_VERSION#v}"
 
 # Patch hosted in IBM's ppc64le build-scripts repo
-PATCH_URL="https://raw.githubusercontent.com/raja-0940/build-scripts/refs/heads/master/e/envoy/envoy_${PACKAGE_VERSIONch"
+PATCH_URL="https://raw.githubusercontent.com/ppc64le/build-scripts/refs/heads/master/e/envoy/envoy_${PACKAGE_VERSION}.patch"
 
 wdir="$(pwd)"
 echo "=== envoy-build.sh starting in ${wdir} for ${PACKAGE_NAME} ${PACKAGE_VERSION} ==="
