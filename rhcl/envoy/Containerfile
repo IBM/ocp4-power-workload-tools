@@ -1,0 +1,46 @@
+# STAGE 1 — builder
+FROM registry.access.redhat.com/ubi9/ubi:latest AS builder
+
+ARG ENVOY_VERSION=v1.36.5
+ENV ENVOY_VERSION=${ENVOY_VERSION}
+
+WORKDIR /src
+
+COPY envoy-build.sh /src/envoy-build.sh
+RUN chmod +x /src/envoy-build.sh && /src/envoy-build.sh "${ENVOY_VERSION}"
+
+RUN /out/envoy --version
+
+# STAGE 2 — runtime
+FROM quay.io/fedora/fedora-minimal:latest
+
+LABEL org.opencontainers.image.ref.name="ubuntu-to-fedora-envoy" \
+      org.opencontainers.image.version="1.36.5" \
+      org.opencontainers.image.source="https://github.com/ppc64le/build-scripts/tree/master/e/envoy"
+
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Minimal runtime dependencies. util-linux-core gives us `setpriv`, which
+# replaces `su-exec` (not packaged for Fedora) in the entrypoint.
+RUN microdnf install -y --setopt=install_weak_deps=0 --nodocs \
+        ca-certificates \
+        tzdata \
+        shadow-utils \
+        util-linux-core && \
+        groupadd --system envoy && \
+        useradd --system --gid envoy envoy && \
+        mkdir -p /etc/envoy && \
+        microdnf clean all
+
+# Config, entrypoint, version marker
+COPY --chown=0:0 --chmod=644 envoy.yaml /etc/envoy/envoy.yaml
+COPY --chown=0:0 --chmod=755 docker-entrypoint.sh /docker-entrypoint.sh
+COPY --chown=0:0 --chmod=755 VERSION.txt /etc/envoy/VERSION.txt
+
+# Envoy binary from the builder stage
+COPY --from=builder --chown=0:0 --chmod=755 /out/envoy /usr/local/bin/envoy
+
+EXPOSE 10000/tcp
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["envoy", "-c", "/etc/envoy/envoy.yaml"]
