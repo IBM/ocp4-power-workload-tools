@@ -61,7 +61,7 @@ jobs:
           containerfiles: |
             ./cma-keda/configmap-reload/Containerfile
           tags: latest ${{ github.sha }}
-          image: configmap-reload
+          image: keda-ppc64le/configmap-reload
           layers: false
           oci: true
 
